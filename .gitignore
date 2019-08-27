@@ -1,2 +1,4 @@
 .idea/
 configs/secrets.yaml
+configs/database.yaml
+stats/
