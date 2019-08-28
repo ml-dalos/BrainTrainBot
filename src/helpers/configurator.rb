@@ -18,6 +18,10 @@ module Helper
       instance.database
     end
 
+    def self.connect_database(database_config = nil)
+      ActiveRecord::Base.establish_connection(database_config || database)
+    end
+
     def load_yaml(config_name)
       ActiveSupport::HashWithIndifferentAccess.new(YAML.load_file(config_name))
     end

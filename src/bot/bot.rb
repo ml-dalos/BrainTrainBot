@@ -1,30 +1,33 @@
 require './src/helpers/helper'
 
-require_relative 'command_parser'
+require_relative 'regular_mode'
 
 class Bot
   include Helper
 
   def initialize
     @mode    = 'regular'
-    @api_key = Secrets.secrets(:bot_api_key)
-    run
+    @api_key = Configurator.secrets(:bot_api_key)
+    Configurator.init_database
   end
-
-  private
 
   def run
     Telegram::Bot::Client.run(@api_key) do |bot|
       bot.listen do |message|
+        puts message.pretty_inspect
         caller, method = CommandParser.parse(mode: @mode, message: message.text)
-        call_method(caller, method)
+        answer = call_method(caller, method, message)
+        answer = 'Shit!' if !answer || answer.empty?
+        bot.api.send_message(chat_id: message.chat.id, text: answer)
       end
     end
   end
 
-  def call_method(caller, method)
-    p caller
-    p method
+  private
+
+  def call_method(caller, method, message)
+    module_name = Object.const_get(caller)
+    module_name.send(method, message)
   end
 
 end
