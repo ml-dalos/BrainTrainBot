@@ -1,4 +1,5 @@
 require 'active_support/core_ext/hash/indifferent_access'
+require 'active_record'
 require 'telegram/bot'
 require 'logger'
 require 'yaml'
