@@ -1,12 +1,13 @@
 require './src/helpers/helper'
 require './src/models/user'
-require_relative 'regular_mode'
+
+require_relative 'commands/commands'
 
 class Bot
   include Helper
+  include Commands
 
   def initialize
-    @mode    = 'regular'
     @api_key = Configurator.secrets(:bot_api_key)
     Configurator.connect_database
   end
@@ -14,21 +15,18 @@ class Bot
   def run
     Telegram::Bot::Client.run(@api_key) do |bot|
       bot.listen do |message|
-        @user = User.find_or_create(message)
-        puts @user.pretty_inspect
-        caller, method = CommandParser.parse(mode: @mode, message: message.text)
-        answer = call_method(caller, method, message)
-        answer = 'Shit!' if !answer || answer.empty?
-        bot.api.send_message(chat_id: message.chat.id, text: answer)
+        user = User.find_or_create(message)
+        user.increment_messages_count
+        method = CommandParser.parse(message.text)
+        call_method(method, message: message, user: user, bot: bot)
       end
     end
   end
 
   private
 
-  def call_method(caller, method, message)
-    module_name = Object.const_get(caller)
-    module_name.send(method, message)
+  def call_method(method, message:, user:, bot:)
+    send(method, message, user, bot)
   end
 
 end

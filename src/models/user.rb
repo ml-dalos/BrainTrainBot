@@ -10,4 +10,9 @@ class User < ActiveRecord::Base
       user.username = user_info.username
     end
   end
+
+  def increment_messages_count
+    new_messages_count = messages_count.next
+    update_attribute('messages_count', new_messages_count)
+  end
 end
