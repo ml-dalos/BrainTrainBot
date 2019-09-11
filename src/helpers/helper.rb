@@ -8,6 +8,7 @@ require 'pry'
 
 require_relative 'configurator'
 require_relative 'command_parser'
+require_relative 'callback_parser'
 
 module Helper
   LOG_DIR = 'stats/'.freeze

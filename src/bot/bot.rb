@@ -17,7 +17,12 @@ class Bot
       bot.listen do |message|
         user = User.find_or_create(message)
         user.increment_messages_count
-        method = CommandParser.parse(message.text)
+        method = case message
+                 when Telegram::Bot::Types::CallbackQuery
+                   CallbackParser.parse(message.data)
+                 when Telegram::Bot::Types::Message
+                   CommandParser.parse(message.text)
+                 end
         call_method(method, message: message, user: user, bot: bot)
       end
     end
