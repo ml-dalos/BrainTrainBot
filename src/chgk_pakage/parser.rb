@@ -15,8 +15,9 @@ module ChgkPackage
 
     def self.get_package(params)
       page = Crawler.get_page(params)
-      page.xpath(XPATH_MAPPER[:package_element]).map do |package_element|
+      page.xpath(XPATH_MAPPER[:package_element]).map.with_index do |package_element, index|
         question           = {}
+        question[:number]  = index.next
         question[:text]    = extract_text(package_element, :question_text)
         question[:origin]  = extract_text(package_element, :question_origin)
         question[:images]  = extract_attributes(package_element, :question_images, 'src')
