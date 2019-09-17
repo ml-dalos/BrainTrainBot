@@ -1,4 +1,4 @@
-class AddPackages < ActiveRecord::Migration[5.1]
+class AddQuestions < ActiveRecord::Migration[5.1]
   def change
     create_table :packages, force: true do |t|
       t.integer :number, null: false
