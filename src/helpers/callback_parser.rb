@@ -11,6 +11,10 @@ module Helper
         return :show_next_question
       end
 
+      on %r{^previous_question$} do
+        return :show_previous_question
+      end
+
       on %r{^new_package$} do
         return :show_new_package
       end
