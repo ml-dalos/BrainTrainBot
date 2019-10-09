@@ -19,6 +19,10 @@ module Helper
         return :show_new_package
       end
 
+      on %r{^show_answer$} do
+        return :show_answer
+      end
+
       :show_undefine_command_error
     end
     # rubocop:enable Metrics/MethodLength, Metrics/LineLength
