@@ -37,7 +37,7 @@ module TrainingCommands
     bot.api.edit_message__text(chat_id: question.chat_id,
                                message_id: question.message_id,
                                text: generate_answer_message(question),
-                               reply_markup: inline_keyboard)
+                               reply_markup: inline_keyboard(show_answer: false))
   end
 
   private
@@ -59,7 +59,7 @@ module TrainingCommands
                                parse_mode: 'HTML')
   end
 
-  def inline_keyboard
+  def inline_keyboard(show_answer: true)
     keyboard = [
       Telegram::Bot::Types::InlineKeyboardButton.new(text: 'Show answer', callback_data: 'show_answer'),
       [
@@ -68,6 +68,7 @@ module TrainingCommands
       ],
       Telegram::Bot::Types::InlineKeyboardButton.new(text: 'New package', callback_data: 'new_package')
     ]
+    keyboard.shift unless show_answer
     Telegram::Bot::Types::InlineKeyboardMarkup.new(inline_keyboard: keyboard)
   end
 
