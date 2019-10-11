@@ -14,16 +14,20 @@ class Bot
 
   def run
     Telegram::Bot::Client.run(@api_key) do |bot|
-      bot.listen do |message|
-        user = User.find_or_create(message)
-        user.increment_messages_count
-        method = case message
-                 when Telegram::Bot::Types::CallbackQuery
-                   CallbackParser.parse(message.data)
-                 when Telegram::Bot::Types::Message
-                   CommandParser.parse(message.text)
-                 end
-        call_method(method, message: message, user: user, bot: bot)
+      begin
+        bot.listen do |message|
+          user = User.find_or_create(message)
+          user.increment_messages_count
+          method = case message
+                   when Telegram::Bot::Types::CallbackQuery
+                     CallbackParser.parse(message.data)
+                   when Telegram::Bot::Types::Message
+                     CommandParser.parse(message.text)
+                   end
+          call_method(method, message: message, user: user, bot: bot)
+        rescue Telegram::Bot::Exceptions::ResponseError
+          call_method(:show_error, message: message, user: user, bot: bot)
+        end
       end
     end
   end

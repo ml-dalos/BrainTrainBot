@@ -34,6 +34,9 @@ module TrainingCommands
 
   def show_answer(message, _user, bot)
     question = current_question(message)
+    return if question.nil?
+    return if message.message.text =~ /.+\nAnswer:.+/i
+
     bot.api.edit_message__text(chat_id: question.chat_id,
                                message_id: question.message_id,
                                text: generate_answer_message(question),
@@ -63,8 +66,8 @@ module TrainingCommands
     keyboard = [
       Telegram::Bot::Types::InlineKeyboardButton.new(text: 'Show answer', callback_data: 'show_answer'),
       [
-        Telegram::Bot::Types::InlineKeyboardButton.new(text: '<< Previous question', callback_data: 'previous_question'),
-        Telegram::Bot::Types::InlineKeyboardButton.new(text: 'Next question >>', callback_data: 'next_question')
+        Telegram::Bot::Types::InlineKeyboardButton.new(text: '<< Prev', callback_data: 'previous_question'),
+        Telegram::Bot::Types::InlineKeyboardButton.new(text: 'Next  >>', callback_data: 'next_question')
       ],
       Telegram::Bot::Types::InlineKeyboardButton.new(text: 'New package', callback_data: 'new_package')
     ]
@@ -82,7 +85,7 @@ module TrainingCommands
     text = 'Source: '
     text << question[:origin] << "\n"
     text << 'Question: ' << question[:text]
-    text << question[:images] unless question[:images].empty?
+    text << question[:images].to_s unless question[:images].empty?
     text
   end
 
@@ -92,7 +95,7 @@ module TrainingCommands
     text << 'Question: ' << question[:text] << "\n"
     text << 'Answer: ' << question[:answer] << "\n"
     text << 'Comment: ' << question[:comment] << "\n"
-    text << question[:images] unless question[:images].empty?
+    text << question[:images].to_s unless question[:images].empty?
     text
   end
 
