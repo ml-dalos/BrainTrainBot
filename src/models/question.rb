@@ -40,6 +40,6 @@ class Question < ActiveRecord::Base
 
   def current_package
     Question.where(message_id: message_id,
-                   chat_id: chat_id).order(number)
+                   chat_id: chat_id).order(:number)
   end
 end

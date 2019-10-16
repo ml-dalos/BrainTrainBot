@@ -15,12 +15,14 @@ module DefaultCommands
   end
 
   def show_undefine_command_error(message, _user, bot)
+    chat_id = message.chat.id rescue message.message.chat.id
     answer = "Sorry, I don't understand you. Please, try another command."
-    bot.api.send_message(chat_id: message.chat.id, text: answer)
+    bot.api.send_message(chat_id: chat_id, text: answer)
   end
 
   def show_error(message, _user, bot)
+    chat_id = message.chat.id rescue message.message.chat.id
     answer = 'Oooops! Something went wrong 😥'
-    bot.api.send_message(chat_id: message.chat.id, text: answer)
+    bot.api.send_message(chat_id: chat_id, text: answer)
   end
 end

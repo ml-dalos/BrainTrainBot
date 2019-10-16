@@ -8,7 +8,7 @@ module TrainingCommands
     @package = ChgkPackage::Parser.get_package({})
     question = @package.first
     chat_id = message.chat.id rescue message.from.id
-    message_info = bot.api.send_message(chat_id: chat_id, text: generate_question_message(question), reply_markup: inline_keyboard)
+    message_info = bot.api.send_message(chat_id: chat_id, text: generate_question_message(question), reply_markup: inline_keyboard, parse_mode: 'HTML')
 
     message_info = ActiveSupport::HashWithIndifferentAccess.new(message_info)
     chat_id = message_info[:result][:chat][:id]
@@ -40,7 +40,8 @@ module TrainingCommands
     bot.api.edit_message__text(chat_id: question.chat_id,
                                message_id: question.message_id,
                                text: generate_answer_message(question),
-                               reply_markup: inline_keyboard(show_answer: false))
+                               reply_markup: inline_keyboard(show_answer: false),
+                               parse_mode: 'HTML')
   end
 
   private
@@ -82,21 +83,26 @@ module TrainingCommands
   end
 
   def generate_question_message(question)
-    text = 'Source: '
-    text << question[:origin] << "\n"
-    text << 'Question: ' << question[:text]
-    text << question[:images].to_s unless question[:images].empty?
-    text
+    images = question[:images].first && question[:images].map.with_index { |url, index| "<a href='#{url}'>Image #{index.next}</a>" }
+    <<~MESSAGE
+      #{images}
+      <b>##{question[:number]}</b>
+      <i>Source: #{question[:origin]} </i>
+      <b>Question: </b> #{question[:text]}
+    MESSAGE
   end
 
   def generate_answer_message(question)
-    text = 'Source: '
-    text << question[:origin] << "\n"
-    text << 'Question: ' << question[:text] << "\n"
-    text << 'Answer: ' << question[:answer] << "\n"
-    text << 'Comment: ' << question[:comment] << "\n"
-    text << question[:images].to_s unless question[:images].empty?
-    text
+    images = question[:images].first && question[:images].map.with_index { |url, index| "<a href='#{url}'>Image #{index.next}</a>" }
+    comment = "<b>Comment: </b>#{question[:comment]}" unless question[:comment].empty?
+    <<~MESSAGE
+      #{images}
+      <b>##{question[:number]}</b>
+      <i>Source: #{question[:origin]} </i>
+      <b>Question: </b> #{question[:text]}
+      <b>Answer: </b> #{question[:answer]}
+      #{comment}
+    MESSAGE
   end
 
 end
