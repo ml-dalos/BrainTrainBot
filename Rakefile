@@ -11,7 +11,7 @@ namespace :db do
   desc 'Migrate the database'
   task :migrate do
     Helper::Configurator.connect_database
-    ActiveRecord::MigrationContext.new('db/migrate').migrate
+    ActiveRecord::MigrationContext.new('db/migrate', ActiveRecord::SchemaMigration).migrate
   end
 
   desc 'Create the database'
