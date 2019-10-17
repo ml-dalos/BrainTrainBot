@@ -33,7 +33,6 @@ module TrainingCommands
 
   def show_answer(message, _user, bot)
     question = current_question(message)
-    return if question.nil?
     return if message.message.text =~ /.+\nAnswer:.+/i
 
     bot.api.edit_message__text(chat_id: question.chat_id,
@@ -47,7 +46,6 @@ module TrainingCommands
 
   def change_question_message(message, bot, direction: :next)
     question = current_question(message)
-    return if question.nil?
 
     question = case direction
                when :next

@@ -26,8 +26,8 @@ class Bot
                    end
           answer = call_method(method, message: message, user: user, bot: bot)
           bot.logger.info("[Bot] #{answer.to_json}")
-        rescue Telegram::Bot::Exceptions::ResponseError => e
-          bot.logger.info(e.backtrace)
+        rescue Exception => e
+          bot.logger.error(e.backtrace)
           call_method(:show_error, message: message, user: user, bot: bot)
         end
       end
