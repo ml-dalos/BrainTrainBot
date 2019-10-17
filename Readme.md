@@ -1,10 +1,11 @@
-#BrainTrainBot
-##About:
+# BrainTrainBot
+
+## About:
 A Telegram bot for training your brain using questions from [What?Where?When? database(in Russian)](https://db.chgk.info/).
 
 You can find bot by his nickname - @QuizTrainBrainBot.
 
-##For developers:
+## For developers:
 1. Install ruby
 2. Install gem [bundler](https://bundler.io/)
 3. Configure [PostgreSQL](https://www.postgresql.org/)
