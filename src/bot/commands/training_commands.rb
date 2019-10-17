@@ -4,7 +4,6 @@ require_relative '../../../src/models/question'
 module TrainingCommands
 
   def show_new_package(message, _user, bot)
-    # need to generate keyboard with filters and then generate new package
     @package = ChgkPackage::Parser.get_package({})
     question = @package.first
     chat_id = message.chat.id rescue message.from.id
@@ -86,7 +85,7 @@ module TrainingCommands
     images = question[:images].first && question[:images].map.with_index { |url, index| "<a href='#{url}'>Image #{index.next}</a>" }
     <<~MESSAGE
       #{images}
-      <b>##{question[:number]}</b>
+      <b>##{question[:number]}/24</b>
       <i>Source: #{question[:origin]} </i>
       <b>Question: </b> #{question[:text]}
     MESSAGE
@@ -97,7 +96,7 @@ module TrainingCommands
     comment = "<b>Comment: </b>#{question[:comment]}" unless question[:comment].empty?
     <<~MESSAGE
       #{images}
-      <b>##{question[:number]}</b>
+      <b>##{question[:number]}/24</b>
       <i>Source: #{question[:origin]} </i>
       <b>Question: </b> #{question[:text]}
       <b>Answer: </b> #{question[:answer]}

@@ -3,6 +3,9 @@ require 'nokogiri'
 
 module ChgkPackage
 
+
+  # Params not used now
+  # maybe in future implementations
   class Crawler
     PARAMS_MAPPER = {
       type_chgk: 'question_type[1]',
