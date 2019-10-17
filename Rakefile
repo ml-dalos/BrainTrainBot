@@ -32,4 +32,15 @@ namespace :db do
     ActiveRecord::Base.connection.drop_database(connection_details.fetch('database'))
   end
 
+  desc 'Make drop -> create -> migrate'
+  task :reload do
+    connection_details = Helper::Configurator.database
+    admin_connection   = connection_details.merge('database' => 'postgres',
+                                                  'schema_search_path' => 'public')
+    Helper::Configurator.connect_database(admin_connection)
+    ActiveRecord::Base.connection.drop_database(connection_details.fetch('database'))
+    ActiveRecord::Base.connection.create_database(connection_details.fetch('database'))
+    ActiveRecord::MigrationContext.new('db/migrate', ActiveRecord::SchemaMigration).migrate
+  end
+
 end
