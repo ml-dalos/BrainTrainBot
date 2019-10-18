@@ -24,9 +24,10 @@ module ChgkPackage
       to_date_year: 'to_date[year]'
     }.freeze
     RANDOM_PACKAGE_POST_URL = 'https://db.chgk.info/random'.freeze
+
     def self.get_page(params)
       params = formatted_params(params)
-      page   = Curl::Easy.http_post(TEST_URL, params)
+      page   = Curl::Easy.http_post(RANDOM_PACKAGE_POST_URL, params)
       Nokogiri::HTML(page.body_str)
     end
 
