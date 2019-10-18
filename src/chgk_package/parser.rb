@@ -10,6 +10,7 @@ module ChgkPackage
       question_images: './strong[contains(., "Вопрос")]/following-sibling::img',
       question_text: './strong[contains(., "Вопрос")]/following-sibling::text()',
       answer_text: './/p[child::strong[contains(., "Ответ:")]]/text()',
+      extra_text: './/div[@class="razdatka"]/text()',
       answer_comment: './/p[child::strong[contains(., "Комментарий:")]]/text()'
     }.freeze
 
@@ -17,8 +18,9 @@ module ChgkPackage
       page = Crawler.get_page(params)
       page.xpath(XPATH_MAPPER[:package_element]).map.with_index do |package_element, index|
         question           = {}
-        question[:number]  = index.next
         question[:text]    = extract_text(package_element, :question_text)
+        question[:extra]   = extract_text(package_element, :extra_text)
+        question[:number]  = index.next
         question[:origin]  = extract_text(package_element, :question_origin)
         question[:images]  = extract_attributes(package_element, :question_images, 'src')
         question[:answer]  = extract_text(package_element, :answer_text)

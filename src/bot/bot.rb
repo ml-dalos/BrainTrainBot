@@ -27,7 +27,7 @@ class Bot
           answer = call_method(method, message: message, user: user, bot: bot)
           bot.logger.info("[Bot] #{answer.to_json}")
         rescue Exception => e
-          bot.logger.error(e.backtrace)
+          bot.logger.error(e)
           call_method(:show_error, message: message, user: user, bot: bot)
         end
       end

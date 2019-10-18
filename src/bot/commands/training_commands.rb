@@ -81,22 +81,24 @@ module TrainingCommands
 
   def generate_question_message(question)
     images = question[:images].first && question[:images].map.with_index { |url, index| "<a href='#{url}'>Image #{index.next}</a>" }
+    extra = "\n<pre>#{question[:extra]}</pre>\n" unless question[:extra].empty?
     <<~MESSAGE
       #{images}
       <b>##{question[:number]}/24</b>
       <i>Source: #{question[:origin]} </i>
-      <b>Question: </b> #{question[:text]}
+      <b>Question: </b> #{extra} #{question[:text]}
     MESSAGE
   end
 
   def generate_answer_message(question)
     images = question[:images].first && question[:images].map.with_index { |url, index| "<a href='#{url}'>Image #{index.next}</a>" }
     comment = "<b>Comment: </b>#{question[:comment]}" unless question[:comment].empty?
+    extra = "\n\n<pre>#{question[:extra]}</pre>\n" unless question[:extra].empty?
     <<~MESSAGE
       #{images}
       <b>##{question[:number]}/24</b>
       <i>Source: #{question[:origin]} </i>
-      <b>Question: </b> #{question[:text]}
+      <b>Question: </b> #{extra} #{question[:text]}
       <b>Answer: </b> #{question[:answer]}
       #{comment}
     MESSAGE

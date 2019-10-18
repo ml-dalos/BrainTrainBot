@@ -40,6 +40,7 @@ namespace :db do
     Helper::Configurator.connect_database(admin_connection)
     ActiveRecord::Base.connection.drop_database(connection_details.fetch('database'))
     ActiveRecord::Base.connection.create_database(connection_details.fetch('database'))
+    Helper::Configurator.connect_database
     ActiveRecord::MigrationContext.new('db/migrate', ActiveRecord::SchemaMigration).migrate
   end
 
